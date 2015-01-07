@@ -1,0 +1,11 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
+target 'contentful-ios-dialogs', :exclusive => true do
+  pod "contentful-ios-dialogs", :path => "../"
+end
+
+target 'Tests', :exclusive => true do
+  pod "contentful-ios-dialogs", :path => "../"
+
+  
+end
