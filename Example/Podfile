@@ -1,11 +1,11 @@
 source 'https://github.com/CocoaPods/Specs.git'
 
+inhibit_all_warnings!
+
 target 'contentful-ios-dialogs', :exclusive => true do
-  pod "contentful-ios-dialogs", :path => "../"
+  pod "ContentfulDialogs", :path => "../"
 end
 
 target 'Tests', :exclusive => true do
-  pod "contentful-ios-dialogs", :path => "../"
-
-  
+  pod "ContentfulDialogs", :path => "../"
 end
