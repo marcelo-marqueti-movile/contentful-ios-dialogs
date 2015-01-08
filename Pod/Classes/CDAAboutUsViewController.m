@@ -32,6 +32,27 @@
     return self.tableView.height - (lastRowFrame.origin.y + lastRowFrame.size.height);
 }
 
+-(instancetype)init {
+    self = [super init];
+    if (self) {
+        [self setupTab];
+    }
+    return self;
+}
+
+-(id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self setupTab];
+    }
+    return self;
+}
+
+-(void)setupTab {
+    self.tabBarItem.image = [UIImage imageNamed:@"about"];
+    self.title = NSLocalizedString(@"About Us", nil);
+}
+
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
@@ -43,9 +64,7 @@
 
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.source = [[[NSBundle mainBundle] infoDictionary][@"CFBundleDisplayName"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    self.tabBarItem.image = [UIImage imageNamed:@"about"];
     self.tableView.bounces = NO;
-    self.title = NSLocalizedString(@"About Us", nil);
     self.view.backgroundColor = [UIColor whiteColor];
 
     [self.tableView registerClass:[UITableViewCell class]
