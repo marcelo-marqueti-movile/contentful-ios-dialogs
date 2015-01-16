@@ -17,6 +17,7 @@
 @interface CDAAboutUsViewController ()
 
 @property (nonatomic) CGFloat emptySpaceHeight;
+@property (nonatomic) UIView* footerView;
 @property (nonatomic) NSString* source;
 
 @end
@@ -29,7 +30,7 @@
     NSIndexPath* indexPath = [NSIndexPath indexPathForRow:[self.tableView numberOfRowsInSection:0] - 1
                                                 inSection:0];
     CGRect lastRowFrame = [self.tableView rectForRowAtIndexPath:indexPath];
-    return self.tableView.height - (lastRowFrame.origin.y + lastRowFrame.size.height);
+    return MAX(self.tableView.height - (lastRowFrame.origin.y + lastRowFrame.size.height), 25.0);
 }
 
 -(instancetype)init {
@@ -57,6 +58,13 @@
     [super viewDidAppear:animated];
 
     self.tableView.height = self.tableView.superview.height;
+    self.footerView.hidden = NO;
+}
+
+-(void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+
+    self.footerView.hidden = YES;
 }
 
 -(void)viewDidLoad {
@@ -156,7 +164,7 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    return MAX(self.emptySpaceHeight, 25.0);
+    return self.emptySpaceHeight;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -164,21 +172,22 @@
 }
 
 -(UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    UIView* footerView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0,
-                                                                  tableView.width, self.emptySpaceHeight)];
-    footerView.backgroundColor = [UIColor whiteColor];
-    footerView.userInteractionEnabled = NO;
+    self.footerView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0,
+                                                               tableView.width, self.emptySpaceHeight)];
+    self.footerView.backgroundColor = [UIColor whiteColor];
+    self.footerView.hidden =YES;
+    self.footerView.userInteractionEnabled = NO;
     
     UILabel* versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, tableView.width, 25.0)];
     versionLabel.backgroundColor = [UIColor whiteColor];
-    versionLabel.y = footerView.height - versionLabel.height;
+    versionLabel.y = self.footerView.height - versionLabel.height;
     
     versionLabel.text = [NSString stringWithFormat:NSLocalizedString(@"App version %@", nil),
                               [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
     versionLabel.textAlignment = NSTextAlignmentCenter;
     
-    [footerView addSubview:versionLabel];
-    return footerView;
+    [self.footerView addSubview:versionLabel];
+    return self.footerView;
 }
 
 -(UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
