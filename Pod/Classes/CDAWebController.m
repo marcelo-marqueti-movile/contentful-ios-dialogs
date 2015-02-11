@@ -19,6 +19,13 @@
 
 @implementation CDAWebController
 
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+
+    self.originalHeight = 0.0;
+    [self updateFrames];
+}
+
 -(id)initWithURL:(NSURL *)url {
     self = [super initWithURL:url];
     if (self) {
@@ -31,18 +38,21 @@
     return self;
 }
 
+-(void)updateFrames {
+    if (self.originalHeight == 0.0) {
+        self.originalHeight = self.view.height;
+    }
+
+    self.view.y = UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? 20.0 : -12.0;
+    self.view.height = self.originalHeight + 40.0;
+}
+
 -(void)viewDidLoad {
     [super viewDidLoad];
 
     self.overlayView = [[UIView alloc] initWithFrame:self.view.bounds];
     self.overlayView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.overlayView];
-}
-
--(void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-
-    self.originalHeight = self.view.height;
 }
 
 #pragma UIWebViewDelegate
@@ -53,8 +63,7 @@
     [self.overlayView removeFromSuperview];
     self.overlayView = nil;
 
-    self.view.y = 20.0;
-    self.view.height = self.originalHeight + 40.0;
+    [self updateFrames];
 }
 
 @end

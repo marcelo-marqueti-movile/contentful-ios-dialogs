@@ -18,6 +18,7 @@
 
 @property (nonatomic) CGFloat emptySpaceHeight;
 @property (nonatomic) UIView* footerView;
+@property (nonatomic) UIView* headerView;
 @property (nonatomic) NSString* source;
 
 @end
@@ -26,11 +27,28 @@
 
 @implementation CDAAboutUsViewController
 
+@synthesize emptySpaceHeight = _emptySpaceHeight;
+
+#pragma mark -
+
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+
+    self.tableView.height = self.tableView.superview.height;
+    [self.tableView reloadData];
+}
+
 -(CGFloat)emptySpaceHeight {
+    if (_emptySpaceHeight) {
+        return _emptySpaceHeight;
+    }
+
     NSIndexPath* indexPath = [NSIndexPath indexPathForRow:[self.tableView numberOfRowsInSection:0] - 1
                                                 inSection:0];
     CGRect lastRowFrame = [self.tableView rectForRowAtIndexPath:indexPath];
-    return MAX(self.tableView.height - (lastRowFrame.origin.y + lastRowFrame.size.height), 25.0);
+    _emptySpaceHeight =  MAX(self.tableView.height - (lastRowFrame.origin.y + lastRowFrame.size.height),
+                             25.0);
+    return _emptySpaceHeight;
 }
 
 -(instancetype)init {
@@ -77,6 +95,18 @@
 
     [self.tableView registerClass:[UITableViewCell class]
            forCellReuseIdentifier:NSStringFromClass([self class])];
+}
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+                               duration:(NSTimeInterval)duration {
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+
+    if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+        [UIView animateWithDuration:duration animations:^{
+            self.footerView.alpha = 0.0;
+            self.headerView.alpha = 0.0;
+        }];
+    }
 }
 
 #pragma mark - UITableViewDataSource
@@ -164,18 +194,20 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    return self.emptySpaceHeight;
+    return UIInterfaceOrientationIsLandscape(self.interfaceOrientation) ? 0.0 : self.emptySpaceHeight;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 150.0;
+    return UIInterfaceOrientationIsLandscape(self.interfaceOrientation) ? 0.0 : 150.0;
 }
 
 -(UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    BOOL footerShouldHide = self.footerView == nil;
+
     self.footerView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0,
                                                                tableView.width, self.emptySpaceHeight)];
     self.footerView.backgroundColor = [UIColor whiteColor];
-    self.footerView.hidden =YES;
+    self.footerView.hidden =footerShouldHide;
     self.footerView.userInteractionEnabled = NO;
     
     UILabel* versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, tableView.width, 25.0)];
@@ -191,21 +223,21 @@
 }
 
 -(UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UIView* headerView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, tableView.width, 150.0)];
-    headerView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, tableView.width, 150.0)];
+    self.headerView.backgroundColor = [UIColor groupTableViewBackgroundColor];
     
     UIImageView* logo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo"]];
-    logo.frame = CGRectMake((headerView.width - 70.0) / 2, 10.0, 70.0, 70.0);
-    [headerView addSubview:logo];
+    logo.frame = CGRectMake((self.headerView.width - 70.0) / 2, 10.0, 70.0, 70.0);
+    [self.headerView addSubview:logo];
     
     UILabel* companyName = [[UILabel alloc] initWithFrame:CGRectMake(0.0, CGRectGetMaxY(logo.frame) + 10.0,
-                                                                     headerView.width, 20.0)];
+                                                                     self.headerView.width, 20.0)];
     companyName.font = [UIFont boldSystemFontOfSize:18.0];
     companyName.text = @"Contentful GmbH";
     companyName.textAlignment = NSTextAlignmentCenter;
-    [headerView addSubview:companyName];
+    [self.headerView addSubview:companyName];
     
-    return headerView;
+    return self.headerView;
 }
 
 @end
