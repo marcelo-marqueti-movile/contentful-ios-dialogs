@@ -124,8 +124,9 @@
             cell.textLabel.text = NSLocalizedString(@"FAQ", nil);
             break;
         case 1:
+            cell.textLabel.text = NSLocalizedString(@"Termos de uso", nil);
             //cell.textLabel.text = NSLocalizedString(@"Send feedback", nil);
-            //break;
+            break;
         case 2:
             //cell.textLabel.text = NSLocalizedString(@"Contact us", nil);
             //break;
@@ -133,7 +134,7 @@
             //cell.textLabel.text = NSLocalizedString(@"View Tour", nil);
             //break;
         case 4:
-            cell.textLabel.text = NSLocalizedString(@"Termos de uso", nil);
+            //cell.textLabel.text = NSLocalizedString(@"Termos de uso", nil);
             //break;
     }
     
@@ -141,7 +142,7 @@
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 5;
+    return 2;
 }
 
 #pragma mark - UITableViewDelegate
