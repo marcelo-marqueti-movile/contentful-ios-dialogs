@@ -69,7 +69,7 @@
 
 -(void)setupTab {
     self.tabBarItem.image = [UIImage imageNamed:@"about"];
-    self.title = NSLocalizedString(@"About Us", nil);
+    self.title = NSLocalizedString(@"Sobre o Village", nil);
 }
 
 -(void)viewDidAppear:(BOOL)animated {
