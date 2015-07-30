@@ -124,17 +124,17 @@
             cell.textLabel.text = NSLocalizedString(@"FAQ", nil);
             break;
         case 1:
-            cell.textLabel.text = NSLocalizedString(@"Send feedback", nil);
-            break;
+            //cell.textLabel.text = NSLocalizedString(@"Send feedback", nil);
+            //break;
         case 2:
-            cell.textLabel.text = NSLocalizedString(@"Contact us", nil);
-            break;
+            //cell.textLabel.text = NSLocalizedString(@"Contact us", nil);
+            //break;
         case 3:
-            cell.textLabel.text = NSLocalizedString(@"View Tour", nil);
-            break;
+            //cell.textLabel.text = NSLocalizedString(@"View Tour", nil);
+            //break;
         case 4:
-            cell.textLabel.text = NSLocalizedString(@"Licensing information", nil);
-            break;
+            cell.textLabel.text = NSLocalizedString(@"Termos de uso", nil);
+            //break;
     }
     
     return cell;
